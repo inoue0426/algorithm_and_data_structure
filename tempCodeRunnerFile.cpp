@@ -1,2 +1,2 @@
 
-using namespace std;
+    cout << dp[S.size()][T.size()] << endl;
