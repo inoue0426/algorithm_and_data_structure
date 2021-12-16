@@ -2,70 +2,44 @@
 #include <vector>
 using namespace std;
 
-struct Heap
+void Heapify(vector<int> &a, int i, int N)
 {
-    vector<int> heap;
-    Heap() {}
+    int child1 = 2 * i + 1;
+    if (child1 >= N)
+        return;
 
-    void push(int x)
-    {
-        heap.push_back(x);
-        int i = (int)heap.size() - 1;
-        while (i > 0)
-        {
-            int p = (i - 1) / 2;
-            if (heap[p] >= x)
-                break;
-            heap[i] = heap[p];
-            i = p;
-        }
-        heap[i] = x;
-    }
+    if (child1 + 1 < N && a[child1 + 1] > a[child1])
+        child1++;
 
-    // get maximum score
-    int top()
-    {
-        if (!heap.empty())
-            return heap[0];
-        else
-            return -1;
-    }
+    if (a[child1] <= a[i])
+        return;
 
-    void pop()
+    swap(a[i], a[child1]);
+
+    Heapify(a, child1, N);
+}
+
+void HeapSort(vector<int> &a)
+{
+    int N = a.size();
+    for (int i = N / 2 - 1; i >= 0; i--)
+        Heapify(a, i, N);
+
+    for (int i = N - 1; i >= 0; i--)
     {
-        if (heap.empty())
-            return;
-        int x = heap.back();
-        heap.pop_back();
-        int i = 0;
-        while (i * 2 + 1 < (int)heap.size())
-        {
-            int child1 = i * 2 + 1, child2 = i * 2 + 2;
-            if (child2 < (int)heap.size() && heap[child2] > heap[child1])
-            {
-                child1 = child2;
-            }
-            if (heap[child1] <= x)
-                break;
-            heap[i] = heap[child1];
-            i = child1;
-        }
-        heap[i] = x;
+        swap(a[0], a[i]);
+        Heapify(a, 0, i);
     }
-};
+}
 
 int main()
 {
-    Heap h;
-    h.push(5);
-    h.push(3);
-    h.push(7);
-    h.push(1);
+    int N;
+    cin >> N;
 
-    cout << h.top() << endl;
-    h.pop();
-    cout << h.top() << endl;
+    vector<int> a(N);
+    for (int i = 0; i < N; i++)
+        cin >> a[i];
 
-    h.push(11);
-    cout << h.top() << endl;
+    HeapSort(a);
 }
